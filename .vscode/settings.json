@@ -1,0 +1,12 @@
+{
+    "css.lint.unknownAtRules": "ignore",
+    "tailwindCSS.experimental.classRegex": [
+        [
+            "@apply\\s+([^;]+);",
+            "(?:^|\\s+)([\\w-:]+)"
+        ]
+    ],
+    "tailwindCSS.includeLanguages": {
+        "plaintext": "css"
+    }
+}
