@@ -120,7 +120,7 @@ export default function CallInquiriesClient({ initialInquiries }: CallInquiriesC
         <div className="space-y-8 animate-fade-in-up">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card className="p-6 bg-emerald-50/10 border-emerald-500/10 relative overflow-hidden group hover:border-emerald-500/20 transition-all">
-                    <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-4 opacity-80">Engagement Control</p>
+                    <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-4 opacity-80">Quick Actions</p>
                     <button
                         onClick={() => {
                             setEditingRecord(null)
@@ -142,7 +142,7 @@ export default function CallInquiriesClient({ initialInquiries }: CallInquiriesC
                     icon={<Activity className="w-4 h-4" />}
                     action={
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-lg text-[9px] font-bold text-blue-600 uppercase tracking-widest">
-                            <Zap className="w-3.5 h-3.5" /> Nodes Synchronized
+                            <Zap className="w-3.5 h-3.5" /> Data Synced
                         </div>
                     }
                 />
@@ -165,7 +165,7 @@ export default function CallInquiriesClient({ initialInquiries }: CallInquiriesC
                                 </div>
                                 <div>
                                     <h2 className="text-lg font-bold text-slate-900 leading-none mb-1.5">{editingRecord ? 'Edit Inquiry' : 'Log New Inquiry'}</h2>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-80">Performance Node Update</p>
+                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-80">Update Record</p>
                                 </div>
                             </div>
                             <button

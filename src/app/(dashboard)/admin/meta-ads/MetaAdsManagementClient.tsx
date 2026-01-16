@@ -125,7 +125,7 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
                     icon={<Database className="w-4 h-4" />}
                     action={
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-[9px] font-bold text-emerald-600 uppercase tracking-widest">
-                            <Zap className="w-3.5 h-3.5" /> Real-time Node Sync
+                            <Zap className="w-3.5 h-3.5" /> Live Data
                         </div>
                     }
                 />
@@ -148,7 +148,7 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
                                 </div>
                                 <div>
                                     <h2 className="text-lg font-bold text-slate-900 leading-none mb-1.5">{editingRecord ? 'Edit Record' : 'Add New Record'}</h2>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-80">Campaign Management Node</p>
+                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-80">Campaign Management</p>
                                 </div>
                             </div>
                             <button

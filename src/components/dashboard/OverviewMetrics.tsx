@@ -171,8 +171,8 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
 
                 <Card className="lg:col-span-8 p-0 overflow-hidden flex flex-col">
                     <CardHeader
-                        title="Daily Performance Node"
-                        subtitle="Day-by-day spend and inquiry correlation"
+                        title="Daily Performance"
+                        subtitle="Day-by-day spend and inquiry tracking"
                         icon={<Activity className="w-4 h-4" />}
                     />
                     <CardContent className="flex-1 p-0 overflow-x-auto">
@@ -229,7 +229,7 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                         action={
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-lg text-[9px] font-bold text-blue-600 uppercase tracking-widest">
                                 <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                                Live Global Feed
+                                Live Data
                             </div>
                         }
                     />

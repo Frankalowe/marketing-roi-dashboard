@@ -8,8 +8,8 @@ export default async function AdminCallsPage() {
     return (
         <div className="space-y-10">
             <PageHeader
-                title="Call Telemetry"
-                subtitle="Aggregated customer ingress across global market hubs."
+                title="Call Records"
+                subtitle="Track customer inquiries from all channels and locations."
                 breadcrumbs={['Management', 'Call Inquiries']}
             />
             <CallInquiriesClient
