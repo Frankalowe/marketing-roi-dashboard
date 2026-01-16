@@ -29,15 +29,15 @@ export default function DashboardTabs({ stats, performance, analytics, funnel, f
     ]
 
     return (
-        <div className="space-y-10">
+        <div className="space-y-4">
             {/* Tab Navigation */}
-            <div className="inline-flex items-center gap-1 p-1 bg-surface border border-border-subtle rounded-2xl shadow-xl">
+            <div className="inline-flex items-center gap-1 p-1 bg-surface border border-border-subtle rounded-xl shadow-lg scale-90 origin-left">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={cn(
-                            "flex items-center gap-3 px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 relative group",
+                            "flex items-center gap-2 px-4 py-2 rounded-lg text-[10px] font-bold transition-all duration-300 relative group",
                             activeTab === tab.id
                                 ? "text-primary"
                                 : "text-gray-500 hover:text-white"

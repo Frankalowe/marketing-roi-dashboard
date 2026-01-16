@@ -89,14 +89,14 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
     ]
 
     return (
-        <div className="space-y-8 animate-fade-in-up">
+        <div className="space-y-4 animate-fade-in-up">
             {/* KPI Cards Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                 {cards.map((card) => (
-                    <Card key={card.name} className="p-4 group relative hover:shadow-md transition-all duration-300 border-slate-200/60">
-                        <div className="flex items-start justify-between mb-4">
+                    <Card key={card.name} className="p-3 group relative hover:shadow-md transition-all duration-300 border-slate-200/60">
+                        <div className="flex items-start justify-between mb-2">
                             <div className={cn(
-                                "p-2.5 rounded-lg transition-all duration-500 ring-1 ring-inset shadow-sm",
+                                "p-1.5 rounded-lg transition-all duration-500 ring-1 ring-inset shadow-sm",
                                 card.color === 'blue' ? "bg-blue-50 text-blue-600 ring-blue-500/10" :
                                     card.color === 'emerald' ? "bg-emerald-50 text-emerald-600 ring-emerald-500/10" :
                                         card.color === 'indigo' ? "bg-indigo-50 text-indigo-600 ring-indigo-500/10" :
@@ -108,26 +108,23 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                             </div>
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-1">{card.name}</p>
-                            <p className="text-2xl font-bold text-slate-900 tracking-tight tabular-nums">{card.value}</p>
-                            <div className="mt-3 pt-3 border-t border-slate-50">
-                                <p className="text-[10px] text-slate-500 font-semibold leading-relaxed uppercase tracking-wide">{card.description}</p>
-                            </div>
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{card.name}</p>
+                            <p className="text-lg font-bold text-slate-900 tracking-tight tabular-nums">{card.value}</p>
                         </div>
                     </Card>
                 ))}
             </div>
 
             {/* Bottom Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                <Card className="lg:col-span-4 p-0">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
+                <Card className="lg:col-span-4 p-0 h-full">
                     <CardHeader
                         title="Channel Breakdown"
                         subtitle="Engagement by inquiry type"
                         icon={<PhoneCall className="w-4 h-4" />}
                     />
-                    <CardContent className="space-y-6 pt-4">
-                        <div className="space-y-5">
+                    <CardContent className="space-y-4 pt-2">
+                        <div className="space-y-3">
                             <div className="group">
                                 <div className="flex justify-between items-end mb-3">
                                     <div className="flex flex-col">
@@ -190,7 +187,7 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                         }
                     />
 
-                    <CardContent className="h-[400px] p-0 relative bg-slate-50/30 overflow-hidden">
+                    <CardContent className="h-[250px] p-0 relative bg-slate-50/30 overflow-hidden">
                         {/* Map Visualization */}
                         <div className="absolute inset-0">
                             <GlobalPresenceMap data={analytics.byCountry} />

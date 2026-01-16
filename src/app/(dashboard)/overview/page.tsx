@@ -25,13 +25,13 @@ export default async function OverviewPage({
     ])
 
     return (
-        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">
+                    <h1 className="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500">
                         Performance Overview
                     </h1>
-                    <p className="text-gray-500 mt-2 font-medium">Real-time marketing metrics and conversion tracking.</p>
+                    <p className="text-gray-500 text-xs mt-1 font-medium">Real-time marketing metrics and conversion tracking.</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
                     <DateRangePicker />
