@@ -1,9 +1,9 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 
 export async function getActiveCampaigns() {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     const { data, error } = await supabase
         .from('meta_ads')
         .select('campaign_id, campaign_name')
@@ -16,7 +16,7 @@ export async function getActiveCampaigns() {
 }
 
 export async function getCallInquiries() {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     const { data, error } = await supabase
         .from('call_inquiries')
         .select('*')
@@ -27,7 +27,7 @@ export async function getCallInquiries() {
 
 
 export async function getMetaAds() {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     const { data, error } = await supabase
         .from('meta_ads')
         .select('*')
@@ -37,7 +37,7 @@ export async function getMetaAds() {
 }
 
 export async function getOverviewStats(startDate?: string, endDate?: string) {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
 
     // Fetch active data with date for daily grouping
     let adsQuery = supabase.from('meta_ads').select('date, amount_spent, impressions, link_clicks').is('deleted_at', null)
@@ -94,7 +94,7 @@ export async function getOverviewStats(startDate?: string, endDate?: string) {
 }
 
 export async function getCampaignPerformance() {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
 
     // Fetch Meta Ads data only (independent of call inquiries)
     const { data: ads } = await supabase.from('meta_ads').select('*').is('deleted_at', null)
@@ -123,7 +123,7 @@ export async function getCampaignPerformance() {
 }
 
 export async function getCallAnalytics() {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     const { data: calls } = await supabase.from('call_inquiries').select('*').is('deleted_at', null)
 
     const byCountry: Record<string, any> = {}
@@ -160,7 +160,7 @@ export async function getCallAnalytics() {
 }
 
 export async function getFunnelData() {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
 
     const { data: ads } = await supabase.from('meta_ads').select('impressions, link_clicks').is('deleted_at', null)
     const { data: calls } = await supabase.from('call_inquiries').select('total_calls, wins').is('deleted_at', null)
@@ -179,7 +179,7 @@ export async function getFunnelData() {
 }
 
 export async function getForecastingData() {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
 
     // Requirement: < 14 days or < 30 wins
     const { data: ads } = await supabase.from('meta_ads').select('date, amount_spent').is('deleted_at', null).order('date', { ascending: true })
@@ -223,7 +223,7 @@ export async function getForecastingData() {
 }
 
 export async function globalSearch(query: string) {
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     const q = query.toLowerCase()
 
     const { data: ads } = await supabase.from('meta_ads').select('campaign_name, campaign_id').is('deleted_at', null)
