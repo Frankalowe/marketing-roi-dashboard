@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardHeader, CardContent } from '@/components/shared/Card'
+import GlobalPresenceMap from './GlobalPresenceMap'
 
 interface OverviewMetricsProps {
     stats: {
@@ -233,49 +234,15 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                             </div>
                         }
                     />
-                    <CardContent className="h-[320px] p-0 relative bg-slate-50/30">
+// ... imports
+                    <CardContent className="h-[400px] p-0 relative bg-slate-50/30 overflow-hidden">
                         {/* Map Visualization */}
-                        <div className="absolute inset-0 flex items-center justify-center p-8">
-                            <svg viewBox="0 0 1000 500" className="w-full h-full text-slate-200">
-                                {/* World Map Paths */}
-                                <path fill="currentColor" d="M170,60 L320,60 L300,150 L250,240 L150,200 Z" className="hover:text-blue-200 transition-colors" /> {/* NA */}
-                                <path fill="currentColor" d="M280,250 L350,250 L380,350 L320,480 L260,350 Z" className="hover:text-blue-200 transition-colors" /> {/* SA */}
-                                <path fill="currentColor" d="M450,80 L550,80 L550,150 L480,160 L440,140 Z" className="hover:text-blue-200 transition-colors" /> {/* EU */}
-                                <path fill="currentColor" d="M460,170 L580,170 L600,250 L550,380 L480,350 L450,200 Z" className="hover:text-blue-200 transition-colors" /> {/* AF */}
-                                <path fill="currentColor" d="M560,60 L900,60 L950,200 L800,280 L700,250 L600,200 Z" className="hover:text-blue-200 transition-colors" /> {/* AS */}
-                                <path fill="currentColor" d="M800,320 L920,320 L950,420 L850,450 L780,400 Z" className="hover:text-blue-200 transition-colors" /> {/* OC */}
-
-                                {/* Dots for active countries */}
-                                {analytics.byCountry.map((country, idx) => {
-                                    const coords: Record<string, { x: number, y: number }> = {
-                                        'US': { x: 222, y: 138 }, 'GB': { x: 490, y: 97 }, 'DE': { x: 527, y: 108 },
-                                        'FR': { x: 505, y: 122 }, 'LK': { x: 724, y: 227 }, 'IN': { x: 713, y: 194 },
-                                        'AE': { x: 650, y: 186 }, 'AU': { x: 869, y: 319 }, 'CA': { x: 194, y: 83 },
-                                        'SG': { x: 788, y: 246 },
-                                    }
-                                    const pos = coords[country.iso] || { x: 500 + (Math.random() - 0.5) * 400, y: 250 + (Math.random() - 0.5) * 200 }
-                                    const size = Math.min(15, 6 + (country.calls / (stats.totalCalls || 1)) * 30)
-                                    return (
-                                        <g key={country.iso} className="group/dot cursor-pointer">
-                                            <circle cx={pos.x} cy={pos.y} r={size} className="fill-blue-500/10 stroke-blue-500/30 stroke-2 animate-pulse" />
-                                            <circle cx={pos.x} cy={pos.y} r={size / 2} className="fill-blue-600 shadow-lg transition-transform group-hover/dot:scale-150" />
-                                            <foreignObject x={pos.x + 10} y={pos.y - 10} width="150" height="40" className="overflow-visible opacity-0 group-hover/dot:opacity-100 transition-opacity pointer-events-none">
-                                                <div className="bg-slate-900 text-white p-2 rounded-lg text-[10px] whitespace-nowrap border border-white/10 shadow-2xl">
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <span className="font-bold uppercase tracking-tight">{country.name}</span>
-                                                        <span className="text-slate-400 font-bold">{country.iso}</span>
-                                                    </div>
-                                                    <div className="text-blue-400 font-bold tabular-nums">{country.calls} INQUIRIES</div>
-                                                </div>
-                                            </foreignObject>
-                                        </g>
-                                    )
-                                })}
-                            </svg>
+                        <div className="absolute inset-0">
+                            <GlobalPresenceMap data={analytics.byCountry} />
                         </div>
 
                         {/* Country List Sidebar */}
-                        <div className="absolute right-6 top-6 bottom-6 w-48 bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-4 shadow-xl flex flex-col pointer-events-auto overflow-hidden">
+                        <div className="absolute right-6 top-6 bottom-6 w-48 bg-white/80 backdrop-blur-sm border border-slate-100 rounded-2xl p-4 shadow-xl flex flex-col pointer-events-auto overflow-hidden z-20">
                             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-4">Top Markets</p>
                             <div className="flex-1 overflow-y-auto space-y-4 scrollbar-hide pr-1">
                                 {analytics.byCountry.slice(0, 5).map((c) => (
@@ -289,14 +256,6 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                                         </div>
                                     </div>
                                 ))}
-                            </div>
-                        </div>
-
-                        {/* Legend */}
-                        <div className="absolute left-6 bottom-6 flex gap-4">
-                            <div className="flex items-center gap-2 px-3 py-1.5 bg-white/80 backdrop-blur-sm border border-slate-100 rounded-full shadow-sm">
-                                <div className="w-2 h-2 rounded-full bg-blue-600" />
-                                <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">High Volume</span>
                             </div>
                         </div>
                     </CardContent>
