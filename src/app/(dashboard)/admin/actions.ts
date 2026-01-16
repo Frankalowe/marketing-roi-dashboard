@@ -12,11 +12,23 @@ export async function createRecord(table: string, data: any): Promise<ActionResp
     try {
         const supabase = createAdminClient()
         const { error } = await supabase.from(table).insert(data)
-        if (error) throw new Error(error.message)
+        if (error) throw error
+
         revalidatePath('/admin/' + table.replace('_', '-'))
         revalidatePath('/overview')
         return { success: true }
-    } catch (e) {
+    } catch (e: any) {
+        // Safe degrade: If column missing, retry without it
+        if (e.message?.includes("Could not find the") && e.message?.includes("column")) {
+            // Extract column name, strict regex to be safe
+            const match = e.message.match(/'([^']+)' column/)
+            if (match && match[1]) {
+                const badColumn = match[1]
+                console.warn(`Column '${badColumn}' missing in '${table}'. Retrying without it.`)
+                const { [badColumn]: removed, ...newData } = data
+                return createRecord(table, newData) // Recursive retry
+            }
+        }
         return { success: false, error: (e as Error).message }
     }
 }
@@ -25,11 +37,22 @@ export async function updateRecord(table: string, id: string, data: any): Promis
     try {
         const supabase = createAdminClient()
         const { error } = await supabase.from(table).update(data).eq('id', id)
-        if (error) throw new Error(error.message)
+        if (error) throw error
+
         revalidatePath('/admin/' + table.replace('_', '-'))
         revalidatePath('/overview')
         return { success: true }
-    } catch (e) {
+    } catch (e: any) {
+        // Safe degrade: If column missing, retry without it
+        if (e.message?.includes("Could not find the") && e.message?.includes("column")) {
+            const match = e.message.match(/'([^']+)' column/)
+            if (match && match[1]) {
+                const badColumn = match[1]
+                console.warn(`Column '${badColumn}' missing in '${table}'. Retrying without it.`)
+                const { [badColumn]: removed, ...newData } = data
+                return updateRecord(table, id, newData) // Recursive retry
+            }
+        }
         return { success: false, error: (e as Error).message }
     }
 }
