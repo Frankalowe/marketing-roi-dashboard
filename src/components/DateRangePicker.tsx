@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isWithinInterval, startOfDay, endOfDay, parseISO } from 'date-fns'
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isWithinInterval, startOfDay, endOfDay, parseISO, subDays } from 'date-fns'
 
 export default function DateRangePicker() {
     const router = useRouter()
@@ -20,6 +20,19 @@ export default function DateRangePicker() {
     const [endDate, setEndDate] = useState<Date | null>(toParam ? parseISO(toParam) : null)
 
     const containerRef = useRef<HTMLDivElement>(null)
+
+    const handlePreset = (days: number) => {
+        const end = new Date()
+        const start = subDays(end, days)
+        setStartDate(start)
+        setEndDate(end)
+        // Auto apply
+        const params = new URLSearchParams(searchParams.toString())
+        params.set('from', format(start, 'yyyy-MM-dd'))
+        params.set('to', format(end, 'yyyy-MM-dd'))
+        router.push(`?${params.toString()}`)
+        setIsOpen(false)
+    }
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -91,6 +104,20 @@ export default function DateRangePicker() {
 
             {isOpen && (
                 <div className="absolute right-0 mt-4 z-50 w-80 bg-[#0d0d0d] border border-white/10 rounded-[32px] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                    <div className="p-4 border-b border-white/5 grid grid-cols-2 gap-2">
+                        <button
+                            onClick={() => handlePreset(7)}
+                            className="px-3 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-bold text-gray-300 transition-all border border-white/5"
+                        >
+                            Last 7 Days
+                        </button>
+                        <button
+                            onClick={() => handlePreset(30)}
+                            className="px-3 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-bold text-gray-300 transition-all border border-white/5"
+                        >
+                            Last 30 Days
+                        </button>
+                    </div>
                     <div className="p-6 border-b border-white/5 flex items-center justify-between">
                         <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 hover:bg-white/5 rounded-xl transition-all">
                             <ChevronLeft className="w-4 h-4 text-gray-400" />

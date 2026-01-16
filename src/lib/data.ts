@@ -36,10 +36,33 @@ export async function getMetaAds() {
     return data || []
 }
 
+async function fetchPeriodStats(supabase: any, startDate?: string, endDate?: string) {
+    let adsQuery = supabase.from('meta_ads').select('amount_spent').is('deleted_at', null)
+    let callsQuery = supabase.from('call_inquiries').select('total_calls, wins').is('deleted_at', null)
+
+    if (startDate) {
+        adsQuery = adsQuery.gte('date', startDate)
+        callsQuery = callsQuery.gte('date', startDate)
+    }
+    if (endDate) {
+        adsQuery = adsQuery.lte('date', endDate)
+        callsQuery = callsQuery.lte('date', endDate)
+    }
+
+    const { data: ads } = await adsQuery
+    const { data: calls } = await callsQuery
+
+    const spend = ads?.reduce((sum: number, ad: any) => sum + Number(ad.amount_spent), 0) || 0
+    const callsTotal = calls?.reduce((sum: number, call: any) => sum + Number(call.total_calls), 0) || 0
+    const wins = calls?.reduce((sum: number, call: any) => sum + Number(call.wins || 0), 0) || 0
+
+    return { spend, calls: callsTotal, wins }
+}
+
 export async function getOverviewStats(startDate?: string, endDate?: string) {
     const supabase = createAdminClient()
 
-    // Fetch active data with date for daily grouping
+    // 1. Fetch Current Period Data (Detailed for Charts)
     let adsQuery = supabase.from('meta_ads').select('date, amount_spent, impressions, link_clicks').is('deleted_at', null)
     let callsQuery = supabase.from('call_inquiries').select('date, total_calls, call_type, wins').is('deleted_at', null)
 
@@ -83,13 +106,48 @@ export async function getOverviewStats(startDate?: string, endDate?: string) {
         cpa: stats.wins > 0 ? stats.spend / stats.wins : 0
     })).sort((a, b) => a.date.localeCompare(b.date))
 
+    // 2. Calculate Trends (Previous Period Comparison)
+    let trends = { spend: 0, calls: 0, wins: 0, cpa: 0 }
+
+    if (startDate) {
+        const start = new Date(startDate)
+        const end = endDate ? new Date(endDate) : new Date()
+        const duration = end.getTime() - start.getTime()
+
+        // Previous period is: [start - duration, start]
+        const prevEnd = new Date(start)
+        const prevStart = new Date(prevEnd.getTime() - duration)
+
+        const prevStats = await fetchPeriodStats(
+            supabase,
+            prevStart.toISOString().split('T')[0],
+            prevEnd.toISOString().split('T')[0]
+        )
+
+        const calcTrend = (current: number, previous: number) => {
+            if (previous === 0) return current > 0 ? 100 : 0
+            return ((current - previous) / previous) * 100
+        }
+
+        const currentCPA = totalWins > 0 ? totalSpend / totalWins : 0
+        const prevCPA = prevStats.wins > 0 ? prevStats.spend / prevStats.wins : 0
+
+        trends = {
+            spend: calcTrend(totalSpend, prevStats.spend),
+            calls: calcTrend(totalCalls, prevStats.calls),
+            wins: calcTrend(totalWins, prevStats.wins),
+            cpa: calcTrend(currentCPA, prevCPA)
+        }
+    }
+
     return {
         totalSpend,
         totalCalls,
         localCalls,
         whatsappCalls,
         totalWins,
-        dailyStats
+        dailyStats,
+        trends
     }
 }
 

@@ -30,6 +30,7 @@ interface OverviewMetricsProps {
         whatsappCalls: number
         totalWins: number
         dailyStats: { date: string, spend: number, calls: number, wins: number, cpa: number }[]
+        trends?: { spend: number, calls: number, wins: number, cpa: number }
     }
     analytics: {
         byCountry: { name: string, iso: string, calls: number, quotes: number }[]
@@ -41,6 +42,12 @@ interface OverviewMetricsProps {
 export default function OverviewMetrics({ stats, analytics }: OverviewMetricsProps) {
     const costPerClient = stats.totalWins > 0 ? stats.totalSpend / stats.totalWins : 0
     const conversionRate = stats.totalCalls > 0 ? (stats.totalWins / stats.totalCalls) * 100 : 0
+    const trends = stats.trends || { spend: 0, calls: 0, wins: 0, cpa: 0 }
+
+    const formatTrend = (val: number) => {
+        const sign = val > 0 ? '+' : ''
+        return `${sign}${val.toFixed(1)}%`
+    }
 
     const cards = [
         {
@@ -49,8 +56,14 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
             description: 'Total investment in campaigns',
             icon: DollarSign,
             color: 'blue',
-            trend: '+12.5%',
-            trendUp: true
+            trend: formatTrend(trends.spend),
+            trendUp: trends.spend > 0,
+            // For Spend, usually Neutral or Context dependent. Let's make it Green if UP (scaling) or maybe just Blue.
+            // Requirement says dynamic. Usually Spend Increase is neutral, but let's stick to Green=Up for consistency or Red if bad?
+            // Actually, in marketing, spending more is fine if ROI is good.
+            // Let's use Green for Up, Red for Down for VOLUME.
+            // For COSTS (CPA), Red for Up (Bad), Green for Down (Good).
+            reverseColor: false
         },
         {
             name: 'Total Inquiries',
@@ -58,8 +71,9 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
             description: 'Hotline & WhatsApp leads',
             icon: PhoneCall,
             color: 'emerald',
-            trend: '+5.2%',
-            trendUp: true
+            trend: formatTrend(trends.calls),
+            trendUp: trends.calls > 0,
+            reverseColor: false
         },
         {
             name: 'Total Clients',
@@ -67,8 +81,9 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
             description: 'Confirmed wins (Conversions)',
             icon: Users,
             color: 'indigo',
-            trend: '+3.1%',
-            trendUp: true
+            trend: formatTrend(trends.wins),
+            trendUp: trends.wins > 0,
+            reverseColor: false
         },
         {
             name: 'Cost per Client',
@@ -76,8 +91,9 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
             description: 'Spend / Total Wins',
             icon: Target,
             color: 'orange',
-            trend: '-2.4%',
-            trendUp: false
+            trend: formatTrend(trends.cpa),
+            trendUp: trends.cpa > 0,
+            reverseColor: true // CPA going UP is BAD (Red), DOWN is GOOD (Green)
         }
     ]
 
@@ -99,7 +115,9 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                             </div>
                             <div className={cn(
                                 "flex items-center gap-1 text-[9px] font-bold px-2 py-1 rounded-md",
-                                card.trendUp ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-red-50 text-red-600 border border-red-100"
+                                (card.reverseColor ? !card.trendUp : card.trendUp)
+                                    ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                                    : "bg-red-50 text-red-600 border border-red-100"
                             )}>
                                 {card.trendUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                                 {card.trend}
