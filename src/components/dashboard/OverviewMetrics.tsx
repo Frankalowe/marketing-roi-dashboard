@@ -15,7 +15,12 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardHeader, CardContent } from '@/components/shared/Card'
-import GlobalPresenceMap from './GlobalPresenceMap'
+import dynamic from 'next/dynamic'
+
+const GlobalPresenceMap = dynamic(() => import('./GlobalPresenceMap'), {
+    ssr: false,
+    loading: () => <div className="w-full h-full bg-slate-50/50 animate-pulse rounded-xl flex items-center justify-center text-slate-300">Loading Map...</div>
+})
 
 interface OverviewMetricsProps {
     stats: {

@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react'
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps'
 import { scaleLinear } from 'd3-scale'
 import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
 import { Globe, Minus, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
