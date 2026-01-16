@@ -83,7 +83,7 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
 
     return (
         <div className="space-y-8 animate-fade-in-up">
-            {/* KPI Cards */}
+            {/* KPI Cards Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {cards.map((card) => (
                     <Card key={card.name} className="p-4 group relative">
@@ -239,7 +239,7 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                             </div>
                         }
                     />
-// ... imports
+
                     <CardContent className="h-[400px] p-0 relative bg-slate-50/30 overflow-hidden">
                         {/* Map Visualization */}
                         <div className="absolute inset-0">
