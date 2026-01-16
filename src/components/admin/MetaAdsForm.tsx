@@ -18,7 +18,6 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
         link_clicks: initialData?.link_clicks || 0,
         reach: initialData?.reach || 0,
         impressions: initialData?.impressions || 0,
-        records: initialData?.records || 0,
         glitch_noted: initialData?.glitch_noted || false,
         glitch_details: initialData?.glitch_details || '',
     })
@@ -133,20 +132,6 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                                 type="number"
                                 value={formData.impressions}
                                 onChange={(e) => setFormData({ ...formData, impressions: parseInt(e.target.value) })}
-                                className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
-                            />
-                        </div>
-
-                        {/* Records */}
-                        <div className="space-y-3">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                <BarChart3 className="w-3 h-3 text-primary" /> Records
-                            </label>
-                            <input
-                                required
-                                type="number"
-                                value={formData.records}
-                                onChange={(e) => setFormData({ ...formData, records: parseInt(e.target.value) })}
                                 className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
                             />
                         </div>

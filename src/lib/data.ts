@@ -40,7 +40,7 @@ export async function getOverviewStats(startDate?: string, endDate?: string) {
     const supabase = await createClient()
 
     // Fetch active data with date for daily grouping
-    let adsQuery = supabase.from('meta_ads').select('date, amount_spent, records, impressions').is('deleted_at', null)
+    let adsQuery = supabase.from('meta_ads').select('date, amount_spent, impressions, link_clicks').is('deleted_at', null)
     let callsQuery = supabase.from('call_inquiries').select('date, total_calls, call_type, wins').is('deleted_at', null)
 
     if (startDate) {
@@ -107,18 +107,18 @@ export async function getCampaignPerformance() {
                 campaign_id: ad.campaign_id,
                 campaign_name: ad.campaign_name,
                 spend: 0,
-                records: 0,
+                link_clicks: 0,
                 impressions: 0
             }
         }
         performance[ad.campaign_id].spend += Number(ad.amount_spent)
-        performance[ad.campaign_id].records += Number(ad.records || 0)
+        performance[ad.campaign_id].link_clicks += Number(ad.link_clicks || 0)
         performance[ad.campaign_id].impressions += Number(ad.impressions || 0)
     })
 
     return Object.values(performance).map(p => ({
         ...p,
-        costPerRecord: p.records > 0 ? p.spend / p.records : 0,
+        costPerClick: p.link_clicks > 0 ? p.spend / p.link_clicks : 0,
     }))
 }
 
@@ -162,17 +162,17 @@ export async function getCallAnalytics() {
 export async function getFunnelData() {
     const supabase = await createClient()
 
-    const { data: ads } = await supabase.from('meta_ads').select('impressions, records').is('deleted_at', null)
+    const { data: ads } = await supabase.from('meta_ads').select('impressions, link_clicks').is('deleted_at', null)
     const { data: calls } = await supabase.from('call_inquiries').select('total_calls, wins').is('deleted_at', null)
 
     const impressions = ads?.reduce((sum, ad) => sum + Number(ad.impressions || 0), 0) || 0
-    const records = ads?.reduce((sum, ad) => sum + Number(ad.records || 0), 0) || 0
+    const linkClicks = ads?.reduce((sum, ad) => sum + Number(ad.link_clicks || 0), 0) || 0
     const totalCalls = calls?.reduce((sum, call) => sum + Number(call.total_calls), 0) || 0
     const clients = calls?.reduce((sum, call) => sum + Number(call.wins || 0), 0) || 0
 
     return [
         { name: 'Impressions', value: impressions, color: 'bg-blue-600' },
-        { name: 'Records', value: records, color: 'bg-indigo-600' },
+        { name: 'Link Clicks', value: linkClicks, color: 'bg-indigo-600' },
         { name: 'Inquiries', value: totalCalls, color: 'bg-emerald-600' },
         { name: 'Clients', value: clients, color: 'bg-orange-600' },
     ]
