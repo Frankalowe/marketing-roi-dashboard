@@ -237,21 +237,21 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                         {/* Map Visualization */}
                         <div className="absolute inset-0 flex items-center justify-center p-8">
                             <svg viewBox="0 0 1000 500" className="w-full h-full text-slate-200">
-                                {/* Simplified World Map Paths */}
-                                <path fill="currentColor" d="M150,150 L180,140 L220,160 L240,220 L200,280 L140,260 Z" className="hover:text-blue-200 transition-colors" /> {/* NA */}
-                                <path fill="currentColor" d="M220,300 L260,320 L270,400 L240,450 L200,420 Z" className="hover:text-blue-200 transition-colors" /> {/* SA */}
-                                <path fill="currentColor" d="M450,120 L480,100 L550,110 L560,160 L520,180 L480,160 Z" className="hover:text-blue-200 transition-colors" /> {/* EU */}
-                                <path fill="currentColor" d="M480,200 L550,220 L580,300 L540,400 L460,380 L440,280 Z" className="hover:text-blue-200 transition-colors" /> {/* AF */}
-                                <path fill="currentColor" d="M580,120 L750,110 L850,180 L820,350 L650,380 L580,260 Z" className="hover:text-blue-200 transition-colors" /> {/* AS */}
-                                <path fill="currentColor" d="M750,380 L820,390 L850,450 L770,460 Z" className="hover:text-blue-200 transition-colors" /> {/* OC */}
+                                {/* World Map Paths */}
+                                <path fill="currentColor" d="M170,60 L320,60 L300,150 L250,240 L150,200 Z" className="hover:text-blue-200 transition-colors" /> {/* NA */}
+                                <path fill="currentColor" d="M280,250 L350,250 L380,350 L320,480 L260,350 Z" className="hover:text-blue-200 transition-colors" /> {/* SA */}
+                                <path fill="currentColor" d="M450,80 L550,80 L550,150 L480,160 L440,140 Z" className="hover:text-blue-200 transition-colors" /> {/* EU */}
+                                <path fill="currentColor" d="M460,170 L580,170 L600,250 L550,380 L480,350 L450,200 Z" className="hover:text-blue-200 transition-colors" /> {/* AF */}
+                                <path fill="currentColor" d="M560,60 L900,60 L950,200 L800,280 L700,250 L600,200 Z" className="hover:text-blue-200 transition-colors" /> {/* AS */}
+                                <path fill="currentColor" d="M800,320 L920,320 L950,420 L850,450 L780,400 Z" className="hover:text-blue-200 transition-colors" /> {/* OC */}
 
                                 {/* Dots for active countries */}
                                 {analytics.byCountry.map((country, idx) => {
                                     const coords: Record<string, { x: number, y: number }> = {
-                                        'US': { x: 200, y: 180 }, 'GB': { x: 480, y: 130 }, 'DE': { x: 500, y: 140 },
-                                        'FR': { x: 490, y: 155 }, 'LK': { x: 700, y: 320 }, 'IN': { x: 680, y: 280 },
-                                        'AE': { x: 600, y: 240 }, 'AU': { x: 800, y: 420 }, 'CA': { x: 180, y: 120 },
-                                        'SG': { x: 730, y: 350 },
+                                        'US': { x: 222, y: 138 }, 'GB': { x: 490, y: 97 }, 'DE': { x: 527, y: 108 },
+                                        'FR': { x: 505, y: 122 }, 'LK': { x: 724, y: 227 }, 'IN': { x: 713, y: 194 },
+                                        'AE': { x: 650, y: 186 }, 'AU': { x: 869, y: 319 }, 'CA': { x: 194, y: 83 },
+                                        'SG': { x: 788, y: 246 },
                                     }
                                     const pos = coords[country.iso] || { x: 500 + (Math.random() - 0.5) * 400, y: 250 + (Math.random() - 0.5) * 200 }
                                     const size = Math.min(15, 6 + (country.calls / (stats.totalCalls || 1)) * 30)
