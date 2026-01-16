@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { createRecord, updateRecord, getCampaignsList } from '@/app/(dashboard)/admin/actions'
-import { X, Calendar, Database, Target, DollarSign, BarChart3, Tag, AlertCircle } from 'lucide-react'
+import { useState } from 'react'
+import { createRecord, updateRecord } from '@/app/(dashboard)/admin/actions'
+import { X, Calendar, Database, Target, DollarSign, BarChart3, AlertCircle, MousePointerClick } from 'lucide-react'
 import { format } from 'date-fns'
 
 interface MetaAdsFormProps {
@@ -12,22 +12,16 @@ interface MetaAdsFormProps {
 
 export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) {
     const [loading, setLoading] = useState(false)
-    const [campaigns, setCampaigns] = useState<any[]>([])
     const [formData, setFormData] = useState({
         date: initialData?.date || format(new Date(), 'yyyy-MM-dd'),
-        campaign_id: initialData?.campaign_id || '',
-        campaign_name: initialData?.campaign_name || '',
         amount_spent: initialData?.amount_spent || 0,
+        link_clicks: initialData?.link_clicks || 0,
         reach: initialData?.reach || 0,
         impressions: initialData?.impressions || 0,
         results: initialData?.results || 0,
         glitch_noted: initialData?.glitch_noted || false,
         glitch_details: initialData?.glitch_details || '',
     })
-
-    useEffect(() => {
-        getCampaignsList().then(setCampaigns)
-    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -47,19 +41,7 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
         }
     }
 
-    const handleCampaignSelect = (campaignId: string) => {
-        if (campaignId === 'new') {
-            // User wants to create a new campaign
-            setFormData({ ...formData, campaign_id: '', campaign_name: '' })
-        } else {
-            const campaign = campaigns.find(c => c.campaign_id === campaignId)
-            if (campaign) {
-                setFormData({ ...formData, campaign_id: campaign.campaign_id, campaign_name: campaign.campaign_name })
-            }
-        }
-    }
 
-    const isNewCampaign = formData.campaign_id === '' || !campaigns.find(c => c.campaign_id === formData.campaign_id)
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/10 backdrop-blur-sm animate-in fade-in duration-300">
@@ -95,50 +77,7 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                             />
                         </div>
 
-                        {/* Campaign Selection */}
-                        <div className="space-y-3">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                <Tag className="w-3 h-3 text-primary" /> Select Campaign
-                            </label>
-                            <div className="relative">
-                                <select
-                                    className="w-full appearance-none bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
-                                    value={isNewCampaign ? 'new' : formData.campaign_id}
-                                    onChange={(e) => handleCampaignSelect(e.target.value)}
-                                >
-                                    <option value="new">+ Create New Campaign</option>
-                                    {campaigns.map(c => (
-                                        <option key={c.campaign_id} value={c.campaign_id}>{c.campaign_name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
 
-                        {/* Custom Campaign ID if new */}
-                        {isNewCampaign && (
-                            <>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Campaign ID</label>
-                                    <input
-                                        required
-                                        placeholder="act_123456789"
-                                        value={formData.campaign_id}
-                                        onChange={(e) => setFormData({ ...formData, campaign_id: e.target.value })}
-                                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight placeholder:text-slate-300"
-                                    />
-                                </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Campaign Name</label>
-                                    <input
-                                        required
-                                        placeholder="Main Launch Campaign"
-                                        value={formData.campaign_name}
-                                        onChange={(e) => setFormData({ ...formData, campaign_name: e.target.value })}
-                                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight placeholder:text-slate-300"
-                                    />
-                                </div>
-                            </>
-                        )}
 
                         {/* Spend */}
                         <div className="space-y-3">
@@ -153,6 +92,21 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                                 onChange={(e) => setFormData({ ...formData, amount_spent: parseFloat(e.target.value) })}
                                 className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
                             />
+                        </div>
+
+                        {/* Link Clicks - Major Metric */}
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <MousePointerClick className="w-3 h-3 text-emerald-600" /> Link Clicks
+                            </label>
+                            <input
+                                required
+                                type="number"
+                                value={formData.link_clicks}
+                                onChange={(e) => setFormData({ ...formData, link_clicks: parseInt(e.target.value) })}
+                                className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all font-bold tracking-tight"
+                            />
+                            <p className="text-[9px] text-emerald-600 font-semibold">Correlates with call inquiries</p>
                         </div>
 
                         {/* Reach */}
