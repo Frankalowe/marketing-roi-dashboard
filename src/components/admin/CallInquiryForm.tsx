@@ -69,12 +69,18 @@ export default function CallInquiryForm({ initialData, onSuccess, onCancel }: Ca
         }
 
         try {
+            let result
             if (initialData?.id) {
-                await updateRecord('call_inquiries', initialData.id, data)
+                result = await updateRecord('call_inquiries', initialData.id, data)
             } else {
-                await createRecord('call_inquiries', data)
+                result = await createRecord('call_inquiries', data)
             }
-            onSuccess()
+
+            if (result.success) {
+                onSuccess()
+            } else {
+                setError(result.error || 'Failed to save record')
+            }
         } catch (err: any) {
             setError(err.message)
         } finally {

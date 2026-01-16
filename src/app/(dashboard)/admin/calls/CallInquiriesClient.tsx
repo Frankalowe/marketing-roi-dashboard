@@ -21,10 +21,14 @@ export default function CallInquiriesClient({ initialInquiries }: CallInquiriesC
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this record?')) return
         try {
-            await deleteRecord('call_inquiries', id)
-            setInquiries(inquiries.filter(i => i.id !== id))
+            const result = await deleteRecord('call_inquiries', id)
+            if (result.success) {
+                setInquiries(inquiries.filter(i => i.id !== id))
+            } else {
+                throw new Error(result.error)
+            }
         } catch (error) {
-            alert('Failed to delete record')
+            alert(`Failed to delete record: ${(error as Error).message}`)
         }
     }
 

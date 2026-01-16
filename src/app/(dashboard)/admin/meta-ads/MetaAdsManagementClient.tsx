@@ -16,10 +16,14 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this record?')) return
         try {
-            await deleteRecord('meta_ads', id)
-            setAds(ads.filter(a => a.id !== id))
+            const result = await deleteRecord('meta_ads', id)
+            if (result.success) {
+                setAds(ads.filter(a => a.id !== id))
+            } else {
+                throw new Error(result.error)
+            }
         } catch (error) {
-            alert('Failed to delete record')
+            alert(`Failed to delete record: ${(error as Error).message}`)
         }
     }
 

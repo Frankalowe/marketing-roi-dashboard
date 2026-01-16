@@ -26,12 +26,18 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
         e.preventDefault()
         setLoading(true)
         try {
+            let result
             if (initialData?.id) {
-                await updateRecord('meta_ads', initialData.id, formData)
+                result = await updateRecord('meta_ads', initialData.id, formData)
             } else {
-                await createRecord('meta_ads', formData)
+                result = await createRecord('meta_ads', formData)
             }
-            onClose()
+
+            if (result.success) {
+                onClose()
+            } else {
+                throw new Error(result.error)
+            }
         } catch (error) {
             console.error('Error saving meta ad:', error)
             alert(`Failed to save record: ${(error as Error).message}`)
