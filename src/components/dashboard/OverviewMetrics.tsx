@@ -39,15 +39,10 @@ interface OverviewMetricsProps {
     }
 }
 
+
 export default function OverviewMetrics({ stats, analytics }: OverviewMetricsProps) {
     const costPerClient = stats.totalWins > 0 ? stats.totalSpend / stats.totalWins : 0
     const conversionRate = stats.totalCalls > 0 ? (stats.totalWins / stats.totalCalls) * 100 : 0
-    const trends = stats.trends || { spend: 0, calls: 0, wins: 0, cpa: 0 }
-
-    const formatTrend = (val: number) => {
-        const sign = val > 0 ? '+' : ''
-        return `${sign}${val.toFixed(1)}%`
-    }
 
     const cards = [
         {
@@ -55,72 +50,62 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
             value: `$${stats.totalSpend.toLocaleString()}`,
             description: 'Total investment in campaigns',
             icon: DollarSign,
-            color: 'blue',
-            trend: formatTrend(trends.spend),
-            trendUp: trends.spend > 0,
-            // For Spend, usually Neutral or Context dependent. Let's make it Green if UP (scaling) or maybe just Blue.
-            // Requirement says dynamic. Usually Spend Increase is neutral, but let's stick to Green=Up for consistency or Red if bad?
-            // Actually, in marketing, spending more is fine if ROI is good.
-            // Let's use Green for Up, Red for Down for VOLUME.
-            // For COSTS (CPA), Red for Up (Bad), Green for Down (Good).
-            reverseColor: false
+            color: 'blue'
         },
         {
             name: 'Total Inquiries',
             value: stats.totalCalls.toLocaleString(),
             description: 'Hotline & WhatsApp leads',
             icon: PhoneCall,
-            color: 'emerald',
-            trend: formatTrend(trends.calls),
-            trendUp: trends.calls > 0,
-            reverseColor: false
+            color: 'emerald'
+        },
+        {
+            name: 'Hotline Calls',
+            value: stats.localCalls.toLocaleString(),
+            description: 'Direct phone inquiries',
+            icon: Phone,
+            color: 'cyan'
+        },
+        {
+            name: 'WhatsApp Messages',
+            value: stats.whatsappCalls.toLocaleString(),
+            description: 'Direct messaging leads',
+            icon: MessageCircle,
+            color: 'teal'
         },
         {
             name: 'Total Clients',
             value: stats.totalWins.toLocaleString(),
             description: 'Confirmed wins (Conversions)',
             icon: Users,
-            color: 'indigo',
-            trend: formatTrend(trends.wins),
-            trendUp: trends.wins > 0,
-            reverseColor: false
+            color: 'indigo'
         },
         {
             name: 'Cost per Client',
             value: `$${costPerClient.toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
             description: 'Spend / Total Wins',
             icon: Target,
-            color: 'orange',
-            trend: formatTrend(trends.cpa),
-            trendUp: trends.cpa > 0,
-            reverseColor: true // CPA going UP is BAD (Red), DOWN is GOOD (Green)
+            color: 'orange'
         }
     ]
 
     return (
         <div className="space-y-8 animate-fade-in-up">
             {/* KPI Cards Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {cards.map((card) => (
-                    <Card key={card.name} className="p-4 group relative">
+                    <Card key={card.name} className="p-4 group relative hover:shadow-md transition-all duration-300 border-slate-200/60">
                         <div className="flex items-start justify-between mb-4">
                             <div className={cn(
                                 "p-2.5 rounded-lg transition-all duration-500 ring-1 ring-inset shadow-sm",
                                 card.color === 'blue' ? "bg-blue-50 text-blue-600 ring-blue-500/10" :
                                     card.color === 'emerald' ? "bg-emerald-50 text-emerald-600 ring-emerald-500/10" :
                                         card.color === 'indigo' ? "bg-indigo-50 text-indigo-600 ring-indigo-500/10" :
-                                            "bg-orange-50 text-orange-600 ring-orange-500/10"
+                                            card.color === 'orange' ? "bg-orange-50 text-orange-600 ring-orange-500/10" :
+                                                card.color === 'cyan' ? "bg-cyan-50 text-cyan-600 ring-cyan-500/10" :
+                                                    "bg-teal-50 text-teal-600 ring-teal-500/10"
                             )}>
                                 <card.icon className="w-5 h-5" />
-                            </div>
-                            <div className={cn(
-                                "flex items-center gap-1 text-[9px] font-bold px-2 py-1 rounded-md",
-                                (card.reverseColor ? !card.trendUp : card.trendUp)
-                                    ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
-                                    : "bg-red-50 text-red-600 border border-red-100"
-                            )}>
-                                {card.trendUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                                {card.trend}
                             </div>
                         </div>
                         <div>
