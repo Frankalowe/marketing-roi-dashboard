@@ -44,15 +44,6 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
             )
         },
         {
-            header: 'Campaign',
-            render: (row: any) => (
-                <div className="flex flex-col">
-                    <span className="text-sm text-slate-900 font-bold uppercase tracking-tight">{row.campaign_name}</span>
-                    <span className="text-[9px] text-slate-400 font-bold tracking-widest uppercase">{row.campaign_id}</span>
-                </div>
-            )
-        },
-        {
             header: 'Ad Spend',
             render: (row: any) => (
                 <span className="text-sm text-slate-900 font-extrabold tabular-nums">

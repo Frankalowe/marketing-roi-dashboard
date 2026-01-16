@@ -70,37 +70,8 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
 
-                    {/* Campaign Info & Date */}
+                    {/* Date - Main Key */}
                     <div className="space-y-4 pb-4 border-b border-slate-100">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                    <Target className="w-3 h-3 text-primary" /> Campaign Name
-                                </label>
-                                <input
-                                    required
-                                    type="text"
-                                    placeholder="e.g. Summer Sale 2024"
-                                    value={formData.campaign_name}
-                                    onChange={(e) => setFormData({ ...formData, campaign_name: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
-                                />
-                            </div>
-                            <div className="space-y-3">
-                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                    <Database className="w-3 h-3 text-primary" /> Campaign ID
-                                </label>
-                                <input
-                                    required
-                                    type="text"
-                                    placeholder="e.g. 120248888..."
-                                    value={formData.campaign_id}
-                                    onChange={(e) => setFormData({ ...formData, campaign_id: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
-                                />
-                            </div>
-                        </div>
-                        {/* Date */}
                         <div className="space-y-3">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                                 <Calendar className="w-3 h-3 text-primary" /> Performance Date
