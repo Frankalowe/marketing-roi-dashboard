@@ -10,8 +10,7 @@ import {
     Zap,
     MessageCircle,
     Phone,
-    Globe,
-    Activity
+    Globe
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardHeader, CardContent } from '@/components/shared/Card'
@@ -178,59 +177,7 @@ export default function OverviewMetrics({ stats, analytics }: OverviewMetricsPro
                     </CardContent>
                 </Card>
 
-                <Card className="lg:col-span-8 p-0 overflow-hidden flex flex-col">
-                    <CardHeader
-                        title="Daily Performance"
-                        subtitle="Day-by-day spend and inquiry tracking"
-                        icon={<Activity className="w-4 h-4" />}
-                    />
-                    <CardContent className="flex-1 p-0 overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="border-b border-slate-50 bg-slate-50/50">
-                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ad Spend</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Inquiries</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Wins</th>
-                                    <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">CPA</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-50">
-                                {stats.dailyStats.slice().reverse().map((day) => (
-                                    <tr key={day.date} className="hover:bg-slate-50/50 transition-colors group">
-                                        <td className="px-6 py-4 text-[11px] font-bold text-slate-900 uppercase tabular-nums">{day.date}</td>
-                                        <td className="px-6 py-4 text-sm font-extrabold text-slate-900 tabular-nums">${day.spend.toLocaleString()}</td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-sm font-extrabold text-slate-900 tabular-nums">{day.calls}</span>
-                                                <div className="w-1.5 h-1.5 rounded-full bg-primary/20" />
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className="text-sm font-extrabold text-success tabular-nums">{day.wins}</span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-50 text-[11px] font-bold text-blue-600 tabular-nums group-hover:bg-blue-600 group-hover:text-white transition-all">
-                                                ${day.cpa.toFixed(0)}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {stats.dailyStats.length === 0 && (
-                                    <tr>
-                                        <td colSpan={5} className="px-6 py-12 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                            No daily performance data available
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </CardContent>
-                </Card>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                <Card className="lg:col-span-12 p-0 overflow-hidden">
+                <Card className="lg:col-span-8 p-0 overflow-hidden">
                     <CardHeader
                         title="Global Presence"
                         subtitle="Inquiry distribution by territory"
