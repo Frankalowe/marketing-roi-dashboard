@@ -34,7 +34,7 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
             onClose()
         } catch (error) {
             console.error('Error saving meta ad:', error)
-            alert('Failed to save record')
+            alert(`Failed to save record: ${(error as Error).message}`)
         } finally {
             setLoading(false)
         }
