@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { Plus, Filter, Edit2, Trash2, Calendar, Database, Zap, ArrowUpRight, TrendingUp, X } from 'lucide-react'
 import { format } from 'date-fns'
 import MetaAdsForm from '@/components/admin/MetaAdsForm'
-import { deleteRecord } from '@/app/(dashboard)/admin/actions'
+import { deleteRecord, getRefreshedMetaAds } from '@/app/(dashboard)/admin/actions'
 import { Card, CardHeader, CardContent } from '@/components/shared/Card'
 import { DataTable } from '@/components/shared/DataTable'
 
@@ -12,6 +12,13 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
     const [ads, setAds] = useState(initialAds)
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingRecord, setEditingRecord] = useState<any>(null)
+
+    const handleFormSuccess = async () => {
+        const updated = await getRefreshedMetaAds()
+        setAds(updated)
+        setIsFormOpen(false)
+        setEditingRecord(null)
+    }
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this record?')) return
@@ -159,10 +166,7 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
                         </div>
                         <div className="p-6">
                             <MetaAdsForm
-                                onClose={() => {
-                                    setIsFormOpen(false)
-                                    setEditingRecord(null)
-                                }}
+                                onClose={handleFormSuccess}
                                 initialData={editingRecord}
                             />
                         </div>

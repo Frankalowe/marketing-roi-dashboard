@@ -23,14 +23,34 @@ export async function getRefreshedCallInquiries() {
     }
 }
 
+export async function getRefreshedMetaAds() {
+    try {
+        const supabase = createAdminClient()
+        const { data } = await supabase
+            .from('meta_ads')
+            .select('*')
+            .is('deleted_at', null)
+            .order('date', { ascending: false })
+        return data || []
+    } catch (e) {
+        console.error("Error fetching meta ads:", e)
+        return []
+    }
+}
+
 export async function createRecord(table: string, data: any): Promise<ActionResponse> {
     try {
         const supabase = createAdminClient()
         const { error } = await supabase.from(table).insert(data)
         if (error) throw error
 
-        revalidatePath('/admin/' + table.replace('_', '-'))
+        // Revalidate all relevant paths
+        const tablePath = table.replace('_', '-')
+        revalidatePath(`/admin/${tablePath}`)
+        revalidatePath('/admin/calls')
+        revalidatePath('/admin/meta-ads')
         revalidatePath('/overview')
+        revalidatePath('/', 'layout')
         return { success: true }
     } catch (e: any) {
         // Safe degrade: If column missing, retry without it
@@ -54,8 +74,13 @@ export async function updateRecord(table: string, id: string, data: any): Promis
         const { error } = await supabase.from(table).update(data).eq('id', id)
         if (error) throw error
 
-        revalidatePath('/admin/' + table.replace('_', '-'))
+        // Revalidate all relevant paths
+        const tablePath = table.replace('_', '-')
+        revalidatePath(`/admin/${tablePath}`)
+        revalidatePath('/admin/calls')
+        revalidatePath('/admin/meta-ads')
         revalidatePath('/overview')
+        revalidatePath('/', 'layout')
         return { success: true }
     } catch (e: any) {
         // Safe degrade: If column missing, retry without it
@@ -82,8 +107,13 @@ export async function deleteRecord(table: string, id: string, softDelete = true)
             const { error } = await supabase.from(table).delete().eq('id', id)
             if (error) throw new Error(error.message)
         }
-        revalidatePath('/admin/' + table.replace('_', '-'))
+        // Revalidate all relevant paths
+        const tablePath = table.replace('_', '-')
+        revalidatePath(`/admin/${tablePath}`)
+        revalidatePath('/admin/calls')
+        revalidatePath('/admin/meta-ads')
         revalidatePath('/overview')
+        revalidatePath('/', 'layout')
         return { success: true }
     } catch (e) {
         return { success: false, error: (e as Error).message }
