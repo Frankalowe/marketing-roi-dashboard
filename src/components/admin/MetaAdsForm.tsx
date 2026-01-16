@@ -134,19 +134,18 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                             />
                         </div>
 
-                        {/* Link Clicks - Major Metric */}
+                        {/* Impressions */}
                         <div className="space-y-3">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                <MousePointerClick className="w-3 h-3 text-emerald-600" /> Link Clicks
+                                <Target className="w-3 h-3 text-primary" /> Impressions
                             </label>
                             <input
                                 required
                                 type="number"
-                                value={formData.link_clicks}
-                                onChange={(e) => setFormData({ ...formData, link_clicks: parseInt(e.target.value) })}
-                                className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all font-bold tracking-tight"
+                                value={formData.impressions}
+                                onChange={(e) => setFormData({ ...formData, impressions: parseInt(e.target.value) })}
+                                className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
                             />
-                            <p className="text-[9px] text-emerald-600 font-semibold">Correlates with call inquiries</p>
                         </div>
 
                         {/* Reach */}
@@ -163,18 +162,19 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                             />
                         </div>
 
-                        {/* Impressions */}
+                        {/* Link Clicks - Major Metric */}
                         <div className="space-y-3">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                                <Target className="w-3 h-3 text-primary" /> Impressions
+                                <MousePointerClick className="w-3 h-3 text-emerald-600" /> Link Clicks
                             </label>
                             <input
                                 required
                                 type="number"
-                                value={formData.impressions}
-                                onChange={(e) => setFormData({ ...formData, impressions: parseInt(e.target.value) })}
-                                className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
+                                value={formData.link_clicks}
+                                onChange={(e) => setFormData({ ...formData, link_clicks: parseInt(e.target.value) })}
+                                className="w-full bg-emerald-50 border border-emerald-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all font-bold tracking-tight"
                             />
+                            <p className="text-[9px] text-emerald-600 font-semibold">Correlates with call inquiries</p>
                         </div>
                     </div>
 
