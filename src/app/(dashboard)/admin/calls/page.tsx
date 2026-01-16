@@ -1,10 +1,9 @@
-import { getCallInquiries, getActiveCampaigns } from '@/lib/data'
+import { getCallInquiries } from '@/lib/data'
 import CallInquiriesClient from './CallInquiriesClient'
 import { PageHeader } from '@/components/shared/PageHeader'
 
 export default async function AdminCallsPage() {
     const inquiries = await getCallInquiries()
-    const campaigns = await getActiveCampaigns()
 
     return (
         <div className="space-y-10">
@@ -15,7 +14,6 @@ export default async function AdminCallsPage() {
             />
             <CallInquiriesClient
                 initialInquiries={inquiries}
-                campaigns={campaigns}
             />
         </div>
     )

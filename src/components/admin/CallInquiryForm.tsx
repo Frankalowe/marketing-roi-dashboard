@@ -8,12 +8,11 @@ import { countries, Country } from '@/lib/countries'
 
 interface CallInquiryFormProps {
     initialData?: any
-    campaigns: { campaign_id: string, campaign_name: string }[]
     onSuccess: () => void
     onCancel: () => void
 }
 
-export default function CallInquiryForm({ initialData, campaigns, onSuccess, onCancel }: CallInquiryFormProps) {
+export default function CallInquiryForm({ initialData, onSuccess, onCancel }: CallInquiryFormProps) {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState('')
@@ -59,7 +58,6 @@ export default function CallInquiryForm({ initialData, campaigns, onSuccess, onC
         const formData = new FormData(e.currentTarget)
         const data = {
             date: formData.get('date'),
-            campaign_id: formData.get('campaign_id'),
             call_type: formData.get('call_type'),
             country_name: selectedCountry.name,
             iso_code: selectedCountry.code,
@@ -98,20 +96,6 @@ export default function CallInquiryForm({ initialData, campaigns, onSuccess, onC
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Campaign</label>
-                    <select
-                        name="campaign_id"
-                        required
-                        defaultValue={initialData?.campaign_id || ''}
-                        className="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 px-4 focus:ring-2 focus:ring-primary/10 outline-none transition-all appearance-none font-bold text-slate-900 tracking-tight"
-                    >
-                        <option value="" disabled>Select Campaign</option>
-                        {campaigns.map(c => (
-                            <option key={c.campaign_id} value={c.campaign_id}>{c.campaign_name}</option>
-                        ))}
-                    </select>
-                </div>
 
                 <div className="space-y-2">
                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Channel</label>

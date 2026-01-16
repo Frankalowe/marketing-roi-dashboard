@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Plus, Filter, Edit2, Trash2, Calendar, Database, Zap, ArrowUpRight, TrendingUp, X, Activity } from 'lucide-react'
+import { Plus, Filter, Edit2, Trash2, Calendar, Database, Zap, ArrowUpRight, TrendingUp, X } from 'lucide-react'
 import { format } from 'date-fns'
 import MetaAdsForm from '@/components/admin/MetaAdsForm'
 import { deleteRecord } from '@/app/(dashboard)/admin/actions'
@@ -139,12 +139,12 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
             </Card>
 
             {isFormOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/5 shadow-[inset_0_0_100px_rgba(0,0,0,0.02)] border border-white/20 backdrop-blur-[2px] animate-in fade-in duration-300">
-                    <Card className="w-full max-w-2xl p-8 bg-white border border-slate-200/60 rounded-[24px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-                        <div className="flex items-center justify-between mb-8">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/10 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="w-full max-w-xl rounded-[24px] bg-white border border-slate-100 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
+                        <div className="flex items-center justify-between mb-6 p-6 border-b border-slate-100 bg-gradient-to-r from-primary/5 to-transparent">
                             <div className="flex items-center gap-4">
-                                <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 ring-1 ring-blue-500/10 shadow-sm">
-                                    <Activity className="w-5 h-5" />
+                                <div className="p-2.5 rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 shadow-sm">
+                                    <Database className="w-5 h-5" />
                                 </div>
                                 <div>
                                     <h2 className="text-lg font-bold text-slate-900 leading-none mb-1.5">{editingRecord ? 'Edit Record' : 'Add New Record'}</h2>
@@ -161,14 +161,16 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
                                 <X className="w-5 h-5 text-slate-400 group-hover:text-slate-900 transition-colors" />
                             </button>
                         </div>
-                        <MetaAdsForm
-                            onClose={() => {
-                                setIsFormOpen(false)
-                                setEditingRecord(null)
-                            }}
-                            initialData={editingRecord}
-                        />
-                    </Card>
+                        <div className="p-6">
+                            <MetaAdsForm
+                                onClose={() => {
+                                    setIsFormOpen(false)
+                                    setEditingRecord(null)
+                                }}
+                                initialData={editingRecord}
+                            />
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

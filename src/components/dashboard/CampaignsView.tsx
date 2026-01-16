@@ -30,15 +30,15 @@ export default function CampaignsView({ performance }: CampaignsViewProps) {
             color: 'blue'
         },
         {
-            label: 'Best Efficiency (CPA)',
-            value: `$${Math.min(...performance.filter(p => p.clients > 0).map(p => p.costPerClient), Infinity).toLocaleString(undefined, { maximumFractionDigits: 0 })}`,
-            icon: TrendingUp,
+            label: 'Total Results',
+            value: performance.reduce((sum, p) => sum + p.results, 0).toLocaleString(),
+            icon: Target,
             color: 'emerald'
         },
         {
-            label: 'Global Conversion Rate',
-            value: `${(performance.reduce((sum, p) => sum + p.conversionRate, 0) / (performance.length || 1)).toFixed(1)}%`,
-            icon: Target,
+            label: 'Avg. Cost per Result',
+            value: `$${(performance.reduce((sum, p) => sum + p.spend, 0) / (performance.reduce((sum, p) => sum + (p.results || 1), 0)) || 1).toLocaleString(undefined, { maximumFractionDigits: 1 })}`,
+            icon: TrendingUp,
             color: 'indigo'
         }
     ]
@@ -60,45 +60,28 @@ export default function CampaignsView({ performance }: CampaignsViewProps) {
             )
         },
         {
-            header: 'Call Volume',
+            header: 'Results (Conversions)',
             render: (p: any) => (
                 <div className="flex items-center gap-4">
-                    <span className="text-sm text-slate-900 font-extrabold tabular-nums">{p.calls.toLocaleString()}</span>
+                    <span className="text-sm text-slate-900 font-extrabold tabular-nums">{p.results.toLocaleString()}</span>
                     <div className="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden flex-shrink-0">
-                        <div className="h-full bg-primary transition-all duration-1000" style={{ width: `${Math.min((p.calls / 50) * 100, 100)}%` }}></div>
+                        <div className="h-full bg-primary transition-all duration-1000" style={{ width: `${Math.min((p.results / 100) * 100, 100)}%` }}></div>
                     </div>
                 </div>
             )
         },
         {
-            header: 'Wins / ROI',
+            header: 'Impressions',
             render: (p: any) => (
-                <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                    <span className="text-sm text-success font-extrabold tabular-nums">{p.clients.toLocaleString()}</span>
-                </div>
+                <span className="text-sm text-slate-500 font-medium tabular-nums">{p.impressions.toLocaleString()}</span>
             )
         },
         {
-            header: 'CPA (Win)',
+            header: 'Cost per Result',
             render: (p: any) => (
                 <div className="flex flex-col">
-                    <span className="text-sm text-slate-900 font-extrabold tabular-nums border-b border-slate-100 pb-1 mb-1 w-fit">${p.costPerClient.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Efficiency Index</span>
-                </div>
-            )
-        },
-        {
-            header: 'Performance',
-            render: (p: any) => (
-                <div className="flex items-center gap-2">
-                    <div className={cn(
-                        "flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold",
-                        p.conversionRate > 2 ? "bg-success/5 text-success" : "bg-danger/5 text-danger"
-                    )}>
-                        {p.conversionRate > 2 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                        {p.conversionRate.toFixed(1)}%
-                    </div>
+                    <span className="text-sm text-slate-900 font-extrabold tabular-nums border-b border-slate-100 pb-1 mb-1 w-fit">${p.costPerResult.toLocaleString(undefined, { maximumFractionDigits: 1 })}</span>
+                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Ad Efficiency</span>
                 </div>
             )
         }

@@ -39,9 +39,9 @@ export async function getMetaAds() {
 export async function getOverviewStats(startDate?: string, endDate?: string) {
     const supabase = await createClient()
 
-    // Fetch active data
-    let adsQuery = supabase.from('meta_ads').select('amount_spent').is('deleted_at', null)
-    let callsQuery = supabase.from('call_inquiries').select('total_calls, call_type, wins').is('deleted_at', null)
+    // Fetch active data with date for daily grouping
+    let adsQuery = supabase.from('meta_ads').select('date, amount_spent, results, impressions').is('deleted_at', null)
+    let callsQuery = supabase.from('call_inquiries').select('date, total_calls, call_type, wins').is('deleted_at', null)
 
     if (startDate) {
         adsQuery = adsQuery.gte('date', startDate)
@@ -61,8 +61,27 @@ export async function getOverviewStats(startDate?: string, endDate?: string) {
     const whatsappCalls = calls?.filter(c => c.call_type === 'whatsapp').reduce((sum, call) => sum + Number(call.total_calls), 0) || 0
     const totalWins = calls?.reduce((sum, call) => sum + Number(call.wins || 0), 0) || 0
 
-    const costPerClient = totalWins > 0 ? totalSpend / totalWins : 0
-    const conversionRate = totalCalls > 0 ? (totalWins / totalCalls) * 100 : 0
+    // Daily breakdown for charts
+    const daily: Record<string, { spend: number, calls: number, wins: number }> = {}
+
+    ads?.forEach(ad => {
+        const d = ad.date
+        if (!daily[d]) daily[d] = { spend: 0, calls: 0, wins: 0 }
+        daily[d].spend += Number(ad.amount_spent)
+    })
+
+    calls?.forEach(call => {
+        const d = call.date
+        if (!daily[d]) daily[d] = { spend: 0, calls: 0, wins: 0 }
+        daily[d].calls += Number(call.total_calls)
+        daily[d].wins += Number(call.wins || 0)
+    })
+
+    const dailyStats = Object.entries(daily).map(([date, stats]) => ({
+        date,
+        ...stats,
+        cpa: stats.wins > 0 ? stats.spend / stats.wins : 0
+    })).sort((a, b) => a.date.localeCompare(b.date))
 
     return {
         totalSpend,
@@ -70,19 +89,16 @@ export async function getOverviewStats(startDate?: string, endDate?: string) {
         localCalls,
         whatsappCalls,
         totalWins,
-        costPerClient,
-        conversionRate
+        dailyStats
     }
 }
 
 export async function getCampaignPerformance() {
     const supabase = await createClient()
 
-    // Fetch all base data
+    // Fetch Meta Ads data only (independent of call inquiries)
     const { data: ads } = await supabase.from('meta_ads').select('*').is('deleted_at', null)
-    const { data: calls } = await supabase.from('call_inquiries').select('*').is('deleted_at', null)
 
-    // Group by campaign_id
     const performance: Record<string, any> = {}
 
     ads?.forEach(ad => {
@@ -92,8 +108,6 @@ export async function getCampaignPerformance() {
                 campaign_name: ad.campaign_name,
                 spend: 0,
                 results: 0,
-                calls: 0,
-                clients: 0,
                 impressions: 0
             }
         }
@@ -102,26 +116,9 @@ export async function getCampaignPerformance() {
         performance[ad.campaign_id].impressions += Number(ad.impressions || 0)
     })
 
-    calls?.forEach(call => {
-        if (!performance[call.campaign_id]) {
-            performance[call.campaign_id] = {
-                campaign_id: call.campaign_id,
-                campaign_name: 'Unknown',
-                spend: 0,
-                results: 0,
-                calls: 0,
-                clients: 0,
-                impressions: 0
-            }
-        }
-        performance[call.campaign_id].calls += Number(call.total_calls)
-        performance[call.campaign_id].clients += Number(call.wins || 0)
-    })
-
     return Object.values(performance).map(p => ({
         ...p,
-        costPerClient: p.clients > 0 ? p.spend / p.clients : 0,
-        conversionRate: p.calls > 0 ? (p.clients / p.calls) * 100 : 0,
+        costPerResult: p.results > 0 ? p.spend / p.results : 0,
     }))
 }
 

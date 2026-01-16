@@ -11,10 +11,9 @@ import { cn } from '@/lib/utils'
 
 interface CallInquiriesClientProps {
     initialInquiries: any[]
-    campaigns: any[]
 }
 
-export default function CallInquiriesClient({ initialInquiries, campaigns }: CallInquiriesClientProps) {
+export default function CallInquiriesClient({ initialInquiries }: CallInquiriesClientProps) {
     const [inquiries, setInquiries] = useState(initialInquiries)
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingRecord, setEditingRecord] = useState<any>(null)
@@ -189,7 +188,6 @@ export default function CallInquiriesClient({ initialInquiries, campaigns }: Cal
                                 setEditingRecord(null)
                             }}
                             initialData={editingRecord}
-                            campaigns={campaigns}
                         />
                     </Card>
                 </div>

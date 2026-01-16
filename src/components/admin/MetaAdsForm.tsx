@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createRecord, updateRecord, getCampaignsList } from '@/app/(dashboard)/admin/actions'
-import { X, Calendar, Database, Target, DollarSign, BarChart3, Tag } from 'lucide-react'
+import { X, Calendar, Database, Target, DollarSign, BarChart3, Tag, AlertCircle } from 'lucide-react'
 import { format } from 'date-fns'
 
 interface MetaAdsFormProps {
@@ -21,6 +21,8 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
         reach: initialData?.reach || 0,
         impressions: initialData?.impressions || 0,
         results: initialData?.results || 0,
+        glitch_noted: initialData?.glitch_noted || false,
+        glitch_details: initialData?.glitch_details || '',
     })
 
     useEffect(() => {
@@ -46,18 +48,23 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
     }
 
     const handleCampaignSelect = (campaignId: string) => {
-        const campaign = campaigns.find(c => c.campaign_id === campaignId)
-        if (campaign) {
-            setFormData({ ...formData, campaign_id: campaign.campaign_id, campaign_name: campaign.campaign_name })
+        if (campaignId === 'new') {
+            // User wants to create a new campaign
+            setFormData({ ...formData, campaign_id: '', campaign_name: '' })
         } else {
-            setFormData({ ...formData, campaign_id: campaignId })
+            const campaign = campaigns.find(c => c.campaign_id === campaignId)
+            if (campaign) {
+                setFormData({ ...formData, campaign_id: campaign.campaign_id, campaign_name: campaign.campaign_name })
+            }
         }
     }
 
+    const isNewCampaign = formData.campaign_id === '' || !campaigns.find(c => c.campaign_id === formData.campaign_id)
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/10 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="bg-white border border-slate-100 w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-                <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-primary/5 to-transparent">
+            <div className="bg-white border border-slate-100 w-full max-w-xl rounded-[24px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
+                <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-primary/5 to-transparent">
                     <div className="flex items-center gap-4">
                         <div className="p-3 rounded-2xl bg-primary text-white shadow-sm shadow-primary/20">
                             <Database className="w-6 h-6" />
@@ -72,8 +79,8 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Date */}
                         <div className="space-y-3">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
@@ -96,10 +103,10 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                             <div className="relative">
                                 <select
                                     className="w-full appearance-none bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight"
-                                    value={formData.campaign_id}
+                                    value={isNewCampaign ? 'new' : formData.campaign_id}
                                     onChange={(e) => handleCampaignSelect(e.target.value)}
                                 >
-                                    <option value="">Pick a campaign...</option>
+                                    <option value="new">+ Create New Campaign</option>
                                     {campaigns.map(c => (
                                         <option key={c.campaign_id} value={c.campaign_id}>{c.campaign_name}</option>
                                     ))}
@@ -108,13 +115,13 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                         </div>
 
                         {/* Custom Campaign ID if new */}
-                        {(!formData.campaign_id || !campaigns.find(c => c.campaign_id === formData.campaign_id)) && (
+                        {isNewCampaign && (
                             <>
                                 <div className="space-y-3">
                                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Campaign ID</label>
                                     <input
                                         required
-                                        placeholder="act_..."
+                                        placeholder="act_123456789"
                                         value={formData.campaign_id}
                                         onChange={(e) => setFormData({ ...formData, campaign_id: e.target.value })}
                                         className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight placeholder:text-slate-300"
@@ -124,7 +131,7 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                                     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Campaign Name</label>
                                     <input
                                         required
-                                        placeholder="Main Launch..."
+                                        placeholder="Main Launch Campaign"
                                         value={formData.campaign_name}
                                         onChange={(e) => setFormData({ ...formData, campaign_name: e.target.value })}
                                         className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 px-5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all font-bold tracking-tight placeholder:text-slate-300"
@@ -191,7 +198,35 @@ export default function MetaAdsForm({ onClose, initialData }: MetaAdsFormProps) 
                         </div>
                     </div>
 
-                    <div className="pt-6 border-t border-slate-100 flex gap-4">
+                    {/* Glitch Reporting */}
+                    <div className="space-y-4 p-4 bg-amber-50 border border-amber-100 rounded-2xl">
+                        <div className="flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4 text-amber-600" />
+                            <label className="text-[10px] font-bold text-amber-700 uppercase tracking-widest">Record Glitch</label>
+                        </div>
+                        <div className="space-y-3">
+                            <label className="flex items-center gap-3 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={formData.glitch_noted}
+                                    onChange={(e) => setFormData({ ...formData, glitch_noted: e.target.checked })}
+                                    className="w-4 h-4 rounded border-slate-200 text-amber-600 focus:ring-amber-500"
+                                />
+                                <span className="text-sm font-semibold text-slate-700">Issue detected with this record</span>
+                            </label>
+                            {formData.glitch_noted && (
+                                <textarea
+                                    placeholder="Describe the glitch or issue..."
+                                    value={formData.glitch_details}
+                                    onChange={(e) => setFormData({ ...formData, glitch_details: e.target.value })}
+                                    className="w-full bg-white border border-amber-200 rounded-xl py-3 px-4 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all resize-none"
+                                    rows={3}
+                                />
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-slate-100 flex gap-4">
                         <button
                             type="button"
                             onClick={onClose}
