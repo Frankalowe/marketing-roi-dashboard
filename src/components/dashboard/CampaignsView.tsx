@@ -30,14 +30,14 @@ export default function CampaignsView({ performance }: CampaignsViewProps) {
             color: 'blue'
         },
         {
-            label: 'Total Results',
-            value: performance.reduce((sum, p) => sum + p.results, 0).toLocaleString(),
+            label: 'Total Records',
+            value: performance.reduce((sum, p) => sum + p.records, 0).toLocaleString(),
             icon: Target,
             color: 'emerald'
         },
         {
-            label: 'Avg. Cost per Result',
-            value: `$${(performance.reduce((sum, p) => sum + p.spend, 0) / (performance.reduce((sum, p) => sum + (p.results || 1), 0)) || 1).toLocaleString(undefined, { maximumFractionDigits: 1 })}`,
+            label: 'Avg. Cost per Record',
+            value: `$${(performance.reduce((sum, p) => sum + p.spend, 0) / (performance.reduce((sum, p) => sum + (p.records || 1), 0)) || 1).toLocaleString(undefined, { maximumFractionDigits: 1 })}`,
             icon: TrendingUp,
             color: 'indigo'
         }
@@ -60,12 +60,12 @@ export default function CampaignsView({ performance }: CampaignsViewProps) {
             )
         },
         {
-            header: 'Results (Conversions)',
+            header: 'Records (Conversions)',
             render: (p: any) => (
                 <div className="flex items-center gap-4">
-                    <span className="text-sm text-slate-900 font-extrabold tabular-nums">{p.results.toLocaleString()}</span>
+                    <span className="text-sm text-slate-900 font-extrabold tabular-nums">{p.records.toLocaleString()}</span>
                     <div className="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden flex-shrink-0">
-                        <div className="h-full bg-primary transition-all duration-1000" style={{ width: `${Math.min((p.results / 100) * 100, 100)}%` }}></div>
+                        <div className="h-full bg-primary transition-all duration-1000" style={{ width: `${Math.min((p.records / 100) * 100, 100)}%` }}></div>
                     </div>
                 </div>
             )
@@ -77,10 +77,10 @@ export default function CampaignsView({ performance }: CampaignsViewProps) {
             )
         },
         {
-            header: 'Cost per Result',
+            header: 'Cost per Record',
             render: (p: any) => (
                 <div className="flex flex-col">
-                    <span className="text-sm text-slate-900 font-extrabold tabular-nums border-b border-slate-100 pb-1 mb-1 w-fit">${p.costPerResult.toLocaleString(undefined, { maximumFractionDigits: 1 })}</span>
+                    <span className="text-sm text-slate-900 font-extrabold tabular-nums border-b border-slate-100 pb-1 mb-1 w-fit">${p.costPerRecord.toLocaleString(undefined, { maximumFractionDigits: 1 })}</span>
                     <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Ad Efficiency</span>
                 </div>
             )

@@ -58,10 +58,10 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
             )
         },
         {
-            header: 'Results',
+            header: 'Records',
             render: (row: any) => (
                 <div className="flex items-center gap-2">
-                    <span className="text-sm text-success font-extrabold tabular-nums">{row.results}</span>
+                    <span className="text-sm text-success font-extrabold tabular-nums">{row.records}</span>
                     <div className="w-1.5 h-1.5 rounded-full bg-success/20" />
                 </div>
             )
@@ -70,7 +70,7 @@ export default function MetaAdsManagementClient({ initialAds }: { initialAds: an
             header: 'CTR / Conv.',
             render: (row: any) => (
                 <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-primary/5 border border-primary/10 rounded-lg text-[10px] font-bold text-primary tabular-nums">
-                    {row.impressions > 0 ? ((row.results / row.impressions) * 100).toFixed(2) : 0}%
+                    {row.impressions > 0 ? ((row.records / row.impressions) * 100).toFixed(2) : 0}%
                 </div>
             )
         },
