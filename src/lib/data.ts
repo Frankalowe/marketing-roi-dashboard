@@ -102,24 +102,27 @@ export async function getCampaignPerformance() {
     const performance: Record<string, any> = {}
 
     ads?.forEach(ad => {
-        if (!performance[ad.campaign_id]) {
-            performance[ad.campaign_id] = {
-                campaign_id: ad.campaign_id,
-                campaign_name: ad.campaign_name,
+        const date = ad.date
+        if (!performance[date]) {
+            performance[date] = {
+                id: date, // Unique ID for key
+                date: date,
                 spend: 0,
                 link_clicks: 0,
-                impressions: 0
+                impressions: 0,
+                reach: 0
             }
         }
-        performance[ad.campaign_id].spend += Number(ad.amount_spent)
-        performance[ad.campaign_id].link_clicks += Number(ad.link_clicks || 0)
-        performance[ad.campaign_id].impressions += Number(ad.impressions || 0)
+        performance[date].spend += Number(ad.amount_spent)
+        performance[date].link_clicks += Number(ad.link_clicks || 0)
+        performance[date].impressions += Number(ad.impressions || 0)
+        performance[date].reach += Number(ad.reach || 0)
     })
 
     return Object.values(performance).map(p => ({
         ...p,
         costPerClick: p.link_clicks > 0 ? p.spend / p.link_clicks : 0,
-    }))
+    })).sort((a, b) => b.date.localeCompare(a.date))
 }
 
 export async function getCallAnalytics() {

@@ -22,7 +22,7 @@ export default function DashboardTabs({ stats, performance, analytics, funnel, f
 
     const tabs = [
         { id: 'metrics', name: 'Overview', icon: LayoutDashboard },
-        { id: 'campaigns', name: 'Campaigns', icon: BarChart3 },
+        { id: 'campaigns', name: 'Daily', icon: BarChart3 },
         { id: 'calls', name: 'Calls', icon: PhoneCall },
         { id: 'funnel', name: 'Funnel', icon: Filter },
         { id: 'forecasting', name: 'Forecast', icon: PieChart },
