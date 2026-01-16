@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { Plus, Filter, Edit2, Trash2, Calendar, Phone, Zap, Globe, MessageCircle, Activity, X } from 'lucide-react'
 import { format } from 'date-fns'
 import CallInquiryForm from '@/components/admin/CallInquiryForm'
-import { deleteRecord } from '@/app/(dashboard)/admin/actions'
+import { deleteRecord, getRefreshedCallInquiries } from '@/app/(dashboard)/admin/actions'
 import { Card, CardHeader, CardContent } from '@/components/shared/Card'
 import { DataTable } from '@/components/shared/DataTable'
 import { cn } from '@/lib/utils'
@@ -17,6 +17,13 @@ export default function CallInquiriesClient({ initialInquiries }: CallInquiriesC
     const [inquiries, setInquiries] = useState(initialInquiries)
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingRecord, setEditingRecord] = useState<any>(null)
+
+    const handleFormSuccess = async () => {
+        setIsFormOpen(false)
+        setEditingRecord(null)
+        const updated = await getRefreshedCallInquiries()
+        setInquiries(updated)
+    }
 
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this record?')) return
@@ -183,10 +190,7 @@ export default function CallInquiriesClient({ initialInquiries }: CallInquiriesC
                             </button>
                         </div>
                         <CallInquiryForm
-                            onSuccess={() => {
-                                setIsFormOpen(false)
-                                setEditingRecord(null)
-                            }}
+                            onSuccess={handleFormSuccess}
                             onCancel={() => {
                                 setIsFormOpen(false)
                                 setEditingRecord(null)

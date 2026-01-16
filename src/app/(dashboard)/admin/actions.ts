@@ -8,6 +8,21 @@ type ActionResponse = {
     error?: string
 }
 
+export async function getRefreshedCallInquiries() {
+    try {
+        const supabase = createAdminClient()
+        const { data } = await supabase
+            .from('call_inquiries')
+            .select('*')
+            .is('deleted_at', null)
+            .order('date', { ascending: false })
+        return data || []
+    } catch (e) {
+        console.error("Error fetching call inquiries:", e)
+        return []
+    }
+}
+
 export async function createRecord(table: string, data: any): Promise<ActionResponse> {
     try {
         const supabase = createAdminClient()
