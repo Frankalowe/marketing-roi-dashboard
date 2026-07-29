@@ -1,4 +1,6 @@
 import { getCallInquiries } from '@/lib/data'
+
+export const dynamic = 'force-dynamic'
 import CallInquiriesClient from './CallInquiriesClient'
 import { PageHeader } from '@/components/shared/PageHeader'
 

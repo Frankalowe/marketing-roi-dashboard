@@ -5,6 +5,8 @@ import {
     getFunnelData,
     getForecastingData
 } from '@/lib/data'
+
+export const dynamic = 'force-dynamic'
 import DateRangePicker from '@/components/DateRangePicker'
 import DashboardTabs from '@/components/dashboard/DashboardTabs'
 

@@ -1,4 +1,6 @@
 import { getMetaAds } from '@/lib/data'
+
+export const dynamic = 'force-dynamic'
 import MetaAdsManagementClient from './MetaAdsManagementClient'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { Database } from 'lucide-react'
